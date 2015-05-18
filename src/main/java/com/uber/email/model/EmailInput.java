@@ -6,8 +6,7 @@ import org.pojomatic.annotations.AutoProperty;
 @AutoProperty
 public class EmailInput {
   private Email email;
-  //Default email provider
-  private EmailProvider emailProvider = EmailProvider.SES;
+  private EmailProvider emailProvider;
 
   public Email getEmail() {
     return email;

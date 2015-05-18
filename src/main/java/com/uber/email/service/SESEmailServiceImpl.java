@@ -29,11 +29,13 @@ public class SESEmailServiceImpl implements EmailService {
   private static final Logger LOGGER = LoggerFactory.getLogger(SESEmailServiceImpl.class);
   private ExecutorService executor = Executors.newFixedThreadPool(10);
   private AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient;
+  private SQSService sqsService;
 
-  public SESEmailServiceImpl(AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient) {
+  public SESEmailServiceImpl(AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient, SQSService sqsService) {
     this.amazonSimpleEmailServiceClient = amazonSimpleEmailServiceClient;
+    this.sqsService = sqsService;
   }
-  
+
   /*
    * Divides the "to:" list into batches of 50 and sends email using amazon's SES asynchronously.
    * If the email sending fails it logs the error and prints the email information related to the failure.
@@ -43,15 +45,7 @@ public class SESEmailServiceImpl implements EmailService {
    */
   public boolean sendEmail(Email email) {
     validate(email);
-//        List<String> toList = new ArrayList<>();
-//        for (int i = 0; i < 140; i++) {
-//          if(i == 51) {
-//            toList.add("foo@gmail.com");
-//          }
-//          toList.add("success@simulator.amazonses.com");
-//        }
-//        email.setTo(toList);
-    
+
     //Split the to list into size of 50 as SES can only send 50 emails at a time.
     List<List<String>> toLists = Lists.partition(email.getTo(), 50);
     Set<Email> result = new HashSet<>();
@@ -64,24 +58,28 @@ public class SESEmailServiceImpl implements EmailService {
         result.add(emailBatch);
       }
     }
-    System.out.println("failure " + result);
+    LOGGER.info("failure " + result);
     if (result.size() > 0) {
-      throw new SESSendEmailException("Failed to send email for batch " + result);
+      for (Email e : result) {
+        sqsService.sendMessage(e.toString());
+      }
+      return false;
+      //throw new SESSendEmailException("Failed to send email for batch " + result);
     }
     return true;
   }
 
   private void validate(Email email) {
-    if(null == email) {
+    if (null == email) {
       throw new EmptyEmailException("Null email");
     }
-    if(null == email.getSubject() || email.getSubject().isEmpty()) {
+    if (null == email.getSubject() || email.getSubject().isEmpty()) {
       throw new EmptySubjectException("Subject cannot be empty");
     }
-    if(null == email.getTo() || email.getTo().size() == 0) {
+    if (null == email.getTo() || email.getTo().size() == 0) {
       throw new EmptyToListException("To list cannot be empty");
     }
-    if(null == email.getFrom() || email.getFrom().isEmpty()) {
+    if (null == email.getFrom() || email.getFrom().isEmpty()) {
       throw new EmptyFromListException("From list cannot be empty");
     }
   }
@@ -105,7 +103,7 @@ public class SESEmailServiceImpl implements EmailService {
     SendEmailRequest request = new SendEmailRequest().withSource(email.getFrom()).withDestination(destination).withMessage(message);
     return request;
   }
-  
+
   /*
    * This class helps in sending emails asynchronously. 
    * Nice part is that because the emails are divided in batches even if one batch fails others will still succeed.

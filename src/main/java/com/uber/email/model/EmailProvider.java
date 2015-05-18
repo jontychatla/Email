@@ -1,5 +1,5 @@
 package com.uber.email.model;
 
 public enum EmailProvider {
-  SES, MAIL_GUN;
+  SES, MAIL_GUN, FAIL_OVER;
 }

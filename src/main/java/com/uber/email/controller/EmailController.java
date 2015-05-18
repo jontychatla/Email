@@ -22,7 +22,7 @@ public class EmailController {
 
   @RequestMapping(value = "/send", method = RequestMethod.POST)
   public @ResponseBody String sendEmail(@RequestBody EmailInput emailInput) {
-    System.out.println("input body " + emailInput);
+    LOGGER.info("input body " + emailInput);
     boolean result = emailManager.sendEmail(emailInput);
     LOGGER.info("email manager result " + result);
     return Boolean.toString(result);

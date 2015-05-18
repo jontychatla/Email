@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,7 +26,10 @@ public class SESEmailServiceImplTest {
 
   @Mock
   private AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient;
-
+  
+  @Mock
+  SQSService sqsService;
+  
   @Before
   public void before() {
     MockitoAnnotations.initMocks(this);
@@ -33,7 +37,7 @@ public class SESEmailServiceImplTest {
 
   @Test
   public void sendEmailSuccess() {
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     Email email = new Email();
     email.setBody("body");
     email.setFrom("test@gmail.com");
@@ -46,7 +50,7 @@ public class SESEmailServiceImplTest {
   
   @Test
   public void sendEmailBatch() {
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     Email email = new Email();
     email.setBody("body");
     email.setFrom("test@gmail.com");
@@ -60,9 +64,9 @@ public class SESEmailServiceImplTest {
     verify(amazonSimpleEmailServiceClient, times(3)).sendEmail(any(SendEmailRequest.class));
   }
   
-  @Test(expected = SESSendEmailException.class)
+  @Test
   public void sendEmailFailure() {
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     Email email = new Email();
     email.setBody("body");
     email.setFrom("test@gmail.com");
@@ -70,12 +74,13 @@ public class SESEmailServiceImplTest {
     List<String> to = Lists.newArrayList("test@gmail.com", "foo@gmail.com");
     email.setTo(to);
     when(amazonSimpleEmailServiceClient.sendEmail(any(SendEmailRequest.class))).thenThrow(new RuntimeException());
-    emailService.sendEmail(email);
+    boolean sendEmail = emailService.sendEmail(email);
+    Assert.assertFalse(sendEmail);
   }
   
   @Test(expected = EmptyEmailException.class)
   public void sendEmailEmptyEmail() {
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     Email email = null;
     emailService.sendEmail(email);
   }
@@ -87,7 +92,7 @@ public class SESEmailServiceImplTest {
     email.setFrom("test@gmail.com");
     List<String> to = Lists.newArrayList("test@gmail.com", "foo@gmail.com");
     email.setTo(to);
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     emailService.sendEmail(email);
   }
   
@@ -97,7 +102,7 @@ public class SESEmailServiceImplTest {
     email.setBody("body");
     email.setSubject("subject");
     email.setFrom("test@gmail.com");
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     emailService.sendEmail(email);
   }
   
@@ -108,7 +113,7 @@ public class SESEmailServiceImplTest {
     email.setSubject("subject");
     List<String> to = Lists.newArrayList("test@gmail.com", "foo@gmail.com");
     email.setTo(to);
-    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient);
+    EmailService emailService = new SESEmailServiceImpl(amazonSimpleEmailServiceClient, sqsService);
     emailService.sendEmail(email);
   }
 }
