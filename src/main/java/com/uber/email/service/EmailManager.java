@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.uber.email.model.EmailInput;
+import com.uber.email.model.SendEmailRequest;
 import com.uber.email.model.EmailProvider;
 
 /*
@@ -24,38 +24,28 @@ public class EmailManager {
   @Resource(name = "getMailGunEmailService")
   private EmailService mailGunEmailService;
 
-  public boolean sendEmail(EmailInput emailInput) {
+  /*
+   * Send emails using SES as email provider and if that fails then select MailGun as email provider and try again.
+   */
+  public boolean sendEmail(SendEmailRequest sendEmailRequest) {
     boolean result = false;
-    if(emailInput.getEmailProvider() == null) {
-      LOGGER.info("Email provider null switching to failover");
-      emailInput.setEmailProvider(EmailProvider.FAIL_OVER);
-    }
-    switch (emailInput.getEmailProvider()) {
-    case FAIL_OVER:
+    EmailProvider provider = EmailProvider.SES;
+    switch (provider) {
     case SES:
-      result = sesEmailService.sendEmail(emailInput.getEmail());
+      result = sesEmailService.sendEmail(sendEmailRequest.getEmail());
       LOGGER.info("result = " + result);
       if (result)
         break;
     case MAIL_GUN:
-      result = mailGunEmailService.sendEmail(emailInput.getEmail());
+      result = mailGunEmailService.sendEmail(sendEmailRequest.getEmail());
       LOGGER.info("result = " + result);
       if (result)
         break;
     default:
-      result = sesEmailService.sendEmail(emailInput.getEmail());
+      result = sesEmailService.sendEmail(sendEmailRequest.getEmail());
       break;
     }
     return result;
-    //    if(emailInput.getEmailProvider() == EmailProvider.SES) {
-    //      boolean result = sesEmailService.sendEmail(emailInput.getEmail());
-    //      LOGGER.info("result = "+result);
-    //      return result;
-    //    }else if(emailInput.getEmailProvider() == EmailProvider.MAIL_GUN){
-    //      mailGunEmailService.sendEmail(emailInput.getEmail());
-    //      return true;
-    //    }
-    //    return false;
   }
 
 }

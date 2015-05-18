@@ -4,9 +4,8 @@ import org.pojomatic.Pojomatic;
 import org.pojomatic.annotations.AutoProperty;
 
 @AutoProperty
-public class EmailInput {
+public class SendEmailRequest {
   private Email email;
-  private EmailProvider emailProvider;
 
   public Email getEmail() {
     return email;
@@ -14,14 +13,6 @@ public class EmailInput {
 
   public void setEmail(Email email) {
     this.email = email;
-  }
-
-  public EmailProvider getEmailProvider() {
-    return emailProvider;
-  }
-
-  public void setEmailProvider(EmailProvider emailProvider) {
-    this.emailProvider = emailProvider;
   }
 
   @Override

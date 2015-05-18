@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.uber.email.model.EmailInput;
+import com.uber.email.model.SendEmailRequest;
 import com.uber.email.service.EmailManager;
 
 @Controller
@@ -21,7 +21,7 @@ public class EmailController {
   private EmailManager emailManager;
 
   @RequestMapping(value = "/send", method = RequestMethod.POST)
-  public @ResponseBody String sendEmail(@RequestBody EmailInput emailInput) {
+  public @ResponseBody String sendEmail(@RequestBody SendEmailRequest emailInput) {
     LOGGER.info("input body " + emailInput);
     boolean result = emailManager.sendEmail(emailInput);
     LOGGER.info("email manager result " + result);
