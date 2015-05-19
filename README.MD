@@ -88,46 +88,46 @@ Service has been currently deployed to elasticbeanstalk.
 
 Sending email using MAILGUN email provider.
 
-curl --data-binary \@- -H "Content-Type:application/json" -X POST
-http://uberemail.elasticbeanstalk.com/email/send \<\<REQUEST
+`curl --data-binary @- -H "Content-Type:application/json" -X POST
+http://uberemail.elasticbeanstalk.com/email/send <<REQUEST`
 
-{ "email": {
+`{ "email": {`
 
-"to": [ "bharat.chatla\@gmail.com" ],
+`    "to": [ "bharat.chatla@gmail.com" ],`
 
-"from": "Mailgun Sandbox
-\<postmaster\@sandbox6dd0eae1e48649118c2754f81b5b913c.mailgun.org\>",
+`    "from": "Mailgun Sandbox
+<postmaster@sandbox6dd0eae1e48649118c2754f81b5b913c.mailgun.org>",`
 
-"subject": "Test Email Using MailGun",
+`    "subject": "Test Email Using MailGun",`
 
-"body" : "Test Uber Challenge Email"
+`    "body" : "Test Uber Challenge Email"`
 
-}
+`  }`
 
-}
+`}`
 
-REQUEST
+`REQUEST`
 
 Sending email using SES email provider.
 
-curl --data-binary \@- -H "Content-Type:application/json" -X POST
-http://uberemail.elasticbeanstalk.com/email/send \<\<REQUEST
+`curl --data-binary @- -H "Content-Type:application/json" -X POST
+http://uberemail.elasticbeanstalk.com/email/send <<REQUEST`
 
-{ "email": {
+`{ "email": {`
 
-"to": [ "bharat.chatla\@gmail.com" ],
+`    "to": [ "bharat.chatla@gmail.com" ],`
 
-"from": "bharat.chatla\@gmail.com",
+`    "from": "bharat.chatla@gmail.com",`
 
-"subject": "Test Email Using SES",
+`    "subject": "Test Email Using SES",`
 
-"body" : "Test Uber Challenge Email"
+`    "body" : "Test Uber Challenge Email"`
 
-}
+`  }`
 
-}
+`}`
 
-REQUEST
+`REQUEST`
 
  
 
