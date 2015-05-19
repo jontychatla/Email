@@ -1,7 +1,5 @@
 **Problem:**
 
- 
-
 Create a service that accepts the necessary information and sends emails. It
 should provide an abstraction between two different email service providers. If
 one of the services goes down, your service can quickly failover to a different
@@ -16,8 +14,6 @@ Mailgun - Simple Send Documentation
 Mandrill - Simple Send Documentation
 
 Amazon SES - Simple Send Documentation
-
- 
 
 All listed services are free to try and are pretty painless to sign up for, so
 please register your own test accounts on each.
@@ -77,8 +73,6 @@ public class MailGunEmailServiceImpl implements EmailService {
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 
-
 Currently the api supports only two email providers {SES, MAIL\_GUN}. It has an
 abstraction layer (strategy pattern). If tomorrow the underlying email provider
 api changes clients calls will not break. It has the feature to add several more
@@ -94,46 +88,46 @@ Service has been currently deployed to elasticbeanstalk.
 
 Sending email using MAILGUN email provider.
 
-*curl --data-binary \@- -H "Content-Type:application/json" -X POST
-http://uberemail.elasticbeanstalk.com/email/send \<\<REQUEST*
+curl --data-binary \@- -H "Content-Type:application/json" -X POST
+http://uberemail.elasticbeanstalk.com/email/send \<\<REQUEST
 
-*{ "email": {*
+{ "email": {
 
-*    "to": [ "bharat.chatla\@gmail.com" ],*
+"to": [ "bharat.chatla\@gmail.com" ],
 
-*    "from": "Mailgun Sandbox
-\<postmaster\@sandbox6dd0eae1e48649118c2754f81b5b913c.mailgun.org\>",*
+"from": "Mailgun Sandbox
+\<postmaster\@sandbox6dd0eae1e48649118c2754f81b5b913c.mailgun.org\>",
 
-*    "subject": "Test Email Using MailGun",*
+"subject": "Test Email Using MailGun",
 
-*    "body" : "Test Uber Challenge Email"*
+"body" : "Test Uber Challenge Email"
 
-*  }*
+}
 
-*}*
+}
 
-*REQUEST*
+REQUEST
 
 Sending email using SES email provider.
 
-*curl --data-binary \@- -H "Content-Type:application/json" -X POST
-http://uberemail.elasticbeanstalk.com/email/send \<\<REQUEST*
+curl --data-binary \@- -H "Content-Type:application/json" -X POST
+http://uberemail.elasticbeanstalk.com/email/send \<\<REQUEST
 
-*{ "email": {*
+{ "email": {
 
-*    "to": [ "bharat.chatla\@gmail.com" ],*
+"to": [ "bharat.chatla\@gmail.com" ],
 
-*    "from": "bharat.chatla\@gmail.com",*
+"from": "bharat.chatla\@gmail.com",
 
-*    "subject": "Test Email Using SES",*
+"subject": "Test Email Using SES",
 
-*    "body" : "Test Uber Challenge Email"*
+"body" : "Test Uber Challenge Email"
 
-*  }*
+}
 
-*}*
+}
 
-*REQUEST*
+REQUEST
 
  
 
