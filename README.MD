@@ -47,8 +47,8 @@ Sending email using MAILGUN email provider.
 
 ``` bash
 
-curl --data-binary @- -H "Content-Type:application/json" 
--X POST http://uberemail.elasticbeanstalk.com/email/send <<REQUEST
+curl --data-binary @- -H "Content-Type:application/json" -X POST \
+http://uberemail.elasticbeanstalk.com/email/send <<REQUEST
 { "email": {
     "to": [ "bharat.chatla@gmail.com" ],
     "from": "postmaster@sandbox6dd0eae1e48649118c2754f81b5b913c.mailgun.org",
@@ -63,8 +63,8 @@ Sending email using SES email provider.
 
 ``` bash
 
-curl --data-binary @- -H "Content-Type:application/json" 
--X POST http://uberemail.elasticbeanstalk.com/email/send <<REQUEST
+curl --data-binary @- -H "Content-Type:application/json" -X POST \
+http://uberemail.elasticbeanstalk.com/email/send <<REQUEST
 { "email": {
     "to": [ "bharat.chatla@gmail.com" ],
     "from": "bharat.chatla@gmail.com",
