@@ -21,9 +21,9 @@ public class EmailController {
   private EmailManager emailManager;
 
   @RequestMapping(value = "/send", method = RequestMethod.POST)
-  public @ResponseBody String sendEmail(@RequestBody SendEmailRequest emailInput) {
-    LOGGER.info("input body " + emailInput);
-    boolean result = emailManager.sendEmail(emailInput);
+  public @ResponseBody String sendEmail(@RequestBody SendEmailRequest sendEmailRequest) {
+    LOGGER.info("input body " + sendEmailRequest);
+    boolean result = emailManager.sendEmail(sendEmailRequest);
     LOGGER.info("email manager result " + result);
     return Boolean.toString(result);
   }
